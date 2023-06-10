@@ -80,7 +80,7 @@ def make_parser():
         help='Type of model to load')
     tune_parser.add_argument('--weights', type=str, required=True,
         help='Path to the model weights.')
-    tune_parser.add_argument("--data-type", choices=["alpaca", "gpt4all"],
+    tune_parser.add_argument("--data-type", choices=["alpaca", "gpt4all", "samsum"],
         help="Dataset format", default="alpaca")
     tune_parser.add_argument("--dataset", required=False,
         help="Path to local dataset file.")
