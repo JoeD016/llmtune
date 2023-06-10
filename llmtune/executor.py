@@ -1,10 +1,11 @@
+import time
 import torch
 import torch.nn as nn
 
 from llmtune.config import DEV, LLAMA_MODELS, OPT_MODELS, get_llm_config
-from llmtune.llms.llama.model import load_llama
+from llmtune.llms.llama.model import load_llama, load_llama_unquantized
 from llmtune.llms.opt.model import load_opt
-from llmtune.engine.data import TrainTxt, TrainSAD, TrainGPT4All
+from llmtune.engine.data import TrainSAD, TrainGPT4All, TrainSAMsum
 from llmtune.engine.data.calibration import get_calibration_loaders
 from llmtune.engine.lora.peft import quant_peft
 from llmtune.engine.quant.algorithm import executor as quant_executor
@@ -36,6 +37,10 @@ def load_adapter(llm, adapter_path=None, lora_config=None):
 def load_data(config, tokenizer):
     if config.ds_type == "alpaca":
         data = TrainSAD(
+            config.dataset, config.val_set_size, tokenizer, config.cutoff_len
+        )
+    elif config.ds_type == "samsum":
+        data = TrainSAMsum(
             config.dataset, config.val_set_size, tokenizer, config.cutoff_len
         )
     elif config.ds_type == "gpt4all":
