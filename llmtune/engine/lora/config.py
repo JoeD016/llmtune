@@ -16,11 +16,11 @@ class Finetune4bConfig:
         self.dataset = dataset
         self.ds_type = ds_type
         self.lora_out_dir = lora_out_dir
-        self.mbatch_size = 32 #mbatch_size
-        self.batch_size = 128 #batch_size
+        self.mbatch_size = mbatch_size
+        self.batch_size = batch_size
         self.gradient_accumulation_steps = self.batch_size // self.mbatch_size
-        self.epochs = 2 #epochs
-        self.lr = 1e-3#lr
+        self.epochs = epochs
+        self.lr = lr
         self.cutoff_len = cutoff_len
         self.lora_r = lora_r
         self.lora_alpha = lora_alpha
