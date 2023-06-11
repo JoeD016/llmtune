@@ -114,7 +114,6 @@ def finetune(llm, tokenizer, tune_config, ds_type):
         resume_from_checkpoint=True,
     )
 
-    data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
     # if ds_type == "samsum":
     #     #data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
@@ -127,7 +126,7 @@ def finetune(llm, tokenizer, tune_config, ds_type):
         train_dataset=data.train_data,
         eval_dataset=data.val_data,
         args=training_arguments,
-        data_collator=data_collator_config,
+        data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False),
     )
     print(training_arguments.parallel_mode)
     model.config.use_cache = False
