@@ -142,7 +142,7 @@ def finetune(llm, tokenizer, tune_config, ds_type):
     trainer.train()
 
     # Save Model
-    model.save_pretrained(tune_config.adapter)
+    model.save_pretrained(tune_config.lora_out_dir)
 
 def quantize(
     llm_config, dataset, nsamples, wbits, groupsize, percdamp, seed, weights
