@@ -171,7 +171,7 @@ def finetune(args):
     from llmtune.config import get_finetune_config
     finetune_config = get_finetune_config(args)
     from llmtune.executor import finetune
-    finetune(llm, tokenizer, finetune_config)
+    finetune(llm, tokenizer, finetune_config, args.dataset)
 
 def quantize(args):
     from llmtune.config import get_llm_config

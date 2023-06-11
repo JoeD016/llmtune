@@ -5,6 +5,7 @@ from llmtune.config import DEV, LLAMA_MODELS, OPT_MODELS, get_llm_config
 from llmtune.llms.llama.model import load_llama
 from llmtune.llms.opt.model import load_opt
 from llmtune.engine.data import TrainTxt, TrainSAD, TrainGPT4All
+from llmtune.engine.data.samsum import SAMsumDataset
 from llmtune.engine.data.calibration import get_calibration_loaders
 from llmtune.engine.lora.peft import quant_peft
 from llmtune.engine.quant.algorithm import executor as quant_executor
@@ -34,6 +35,7 @@ def load_adapter(llm, adapter_path=None, lora_config=None):
     return model  
 
 def load_data(config, tokenizer):
+    # changes are made here to support huggingface load datasets
     if config.ds_type == "alpaca":
         data = TrainSAD(
             config.dataset, config.val_set_size, tokenizer, config.cutoff_len
@@ -43,6 +45,9 @@ def load_data(config, tokenizer):
         data = TrainGPT4All(
             config.dataset, config.val_set_size, tokenizer, config.cutoff_len
         )
+    # Now support SAMSUM
+    elif config.ds_type == "samsum":
+        data = SAMsumDataset(tokenizer,255,50)
     else:
         raise ValueError(f"Invalid data name: {config.ds_type}")
     # data.prepare_data(
@@ -70,10 +75,10 @@ def generate(
         )
     return tokenizer.decode([el.item() for el in generated_ids[0]])    
 
-def finetune(llm, tokenizer, tune_config):
+def finetune(llm, tokenizer, tune_config, ds_type):
     import transformers
     transformers.logging.set_verbosity_info()
-    tokenizer.pad_token_id = 0
+    # tokenizer.pad_token_id = 0 ## commented out after tokenizer has been fixed.
     
     lora_config = quant_peft.LoraConfig(
         r=tune_config.lora_r,
@@ -108,14 +113,17 @@ def finetune(llm, tokenizer, tune_config):
         resume_from_checkpoint=True,
     )
 
+    if ds_type == "samsum":
+        data_collator_config = transformers.DataCollatorForTokenClassification(tokenizer, pad_to_multiple_of=8)
+    else: 
+        data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
+
     trainer = transformers.Trainer(
         model=model,
         train_dataset=data.train_data,
         eval_dataset=data.val_data,
         args=training_arguments,
-        data_collator=transformers.DataCollatorForLanguageModeling(
-            tokenizer, mlm=False
-        ),
+        data_collator=data_collator_config,
     )
     print(training_arguments.parallel_mode)
     model.config.use_cache = False
@@ -123,13 +131,13 @@ def finetune(llm, tokenizer, tune_config):
     # use half precision
     model = to_half_precision(model)
 
-    # if tune_config.resume_checkpoint:
-    #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
-    #     trainer.train(tune_config.resume_checkpoint)
-    # else:
-    #     trainer.train()
+    if tune_config.resume_checkpoint:
+        print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
+        trainer.train(tune_config.resume_checkpoint)
+    else:
+        trainer.train()
 
-    # trainer.train(resume_from_checkpoint=True)
+    trainer.train(resume_from_checkpoint=True)
     trainer.train()
 
     # Save Model
