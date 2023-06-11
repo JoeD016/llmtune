@@ -173,4 +173,4 @@ class SAMsumDataset():
 
 
 def make_output(raw_output):
-    return raw_output.split("### Response:")[1].strip()
+    return raw_output.split("### Output: ")[1].strip()
