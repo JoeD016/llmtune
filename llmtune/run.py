@@ -78,7 +78,7 @@ def make_parser():
 
     # evaluate (currently support SAMsum dataset)
     eval_parser = subparsers.add_parser('evaluate')
-    eval_parser.set_defaults(func=evaluate)
+    eval_parser.set_defaults(func=evaluate_metrics)
 
     eval_parser.add_argument('--model', choices=LLM_MODELS, required=True,
         help='Type of model to load')
@@ -182,7 +182,7 @@ def generate(args):
     print(output)
 
 
-def evaluate(args):
+def evaluate_metrics(args):
     import rouge_score
     import evaluate
     import numpy as np

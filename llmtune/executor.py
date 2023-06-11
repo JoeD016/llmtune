@@ -94,13 +94,12 @@ def finetune(llm, tokenizer, tune_config, ds_type):
     data = load_data(tune_config, tokenizer)
 
     training_arguments = transformers.TrainingArguments(
-        per_device_train_batch_size=32, # equivalent batch_size = 128 (32 * 4)
-        gradient_accumulation_steps=4,
+        per_device_train_batch_size=tune_config.mbatch_size,
+        gradient_accumulation_steps=tune_config.gradient_accumulation_steps,
         warmup_steps=tune_config.warmup_steps,
-        num_train_epochs=tune_config.epochs, #
-        learning_rate=tune_config.lr, #
+        num_train_epochs=tune_config.epochs,
+        learning_rate=tune_config.lr,
         fp16=True,
-        #lr_scheduler_type = "cosine", ## LoRA original paper uses linear with GPT-2/3
         logging_steps=tune_config.logging_steps,
         evaluation_strategy="no",
         save_strategy="steps",
@@ -114,19 +113,17 @@ def finetune(llm, tokenizer, tune_config, ds_type):
         resume_from_checkpoint=True,
     )
 
-
-    # if ds_type == "samsum":
-    #     #data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
-    #     data_collator_config = transformers.DataCollatorForTokenClassification(tokenizer, pad_to_multiple_of=8)
-    # else: 
-    #     data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
+    if ds_type == "samsum":
+        data_collator_config = transformers.DataCollatorForTokenClassification(tokenizer, pad_to_multiple_of=8)
+    else: 
+        data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
     trainer = transformers.Trainer(
         model=model,
         train_dataset=data.train_data,
         eval_dataset=data.val_data,
         args=training_arguments,
-        data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False),
+        data_collator=data_collator_config,
     )
     print(training_arguments.parallel_mode)
     model.config.use_cache = False
