@@ -97,9 +97,10 @@ def finetune(llm, tokenizer, tune_config, ds_type):
         per_device_train_batch_size=32, # equivalent batch_size = 128 (32 * 4)
         gradient_accumulation_steps=4,
         warmup_steps=tune_config.warmup_steps,
-        num_train_epochs=tune_config.epochs,
-        learning_rate=tune_config.lr,
+        num_train_epochs=2, #tune_config.epochs
+        learning_rate=1e-3, #tune_config.lr
         fp16=True,
+        lr_scheduler_type = "cosine", ## LoRA original paper uses linear with GPT-2/3
         logging_steps=tune_config.logging_steps,
         evaluation_strategy="no",
         save_strategy="steps",
