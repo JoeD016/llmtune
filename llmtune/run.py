@@ -88,13 +88,13 @@ def make_parser():
         help='Path to Lora adapter folder (also holds checkpoints)')
 
     # Training args group
-    tune_parser.add_argument("--mbatch_size", default=32, type=int, 
+    tune_parser.add_argument("--mbatch_size", default=1, type=int, 
         help="Micro-batch size. ")
-    tune_parser.add_argument("--batch_size", default=128, type=int, 
+    tune_parser.add_argument("--batch_size", default=2, type=int, 
         help="Batch size. ")
-    tune_parser.add_argument("--epochs", default=2, type=int, 
+    tune_parser.add_argument("--epochs", default=3, type=int, 
         help="Epochs. ")
-    tune_parser.add_argument("--lr", default=1e-3, type=float, 
+    tune_parser.add_argument("--lr", default=2e-4, type=float, 
         help="Learning rate. ")
     tune_parser.add_argument("--cutoff_len", default=256, type=int, 
         help="")
