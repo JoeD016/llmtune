@@ -27,7 +27,7 @@ class InstructDataset(Dataset):
         sample_rate: float = 1.0,
         only_target_loss: bool = True,
         input_type: str = "causal",
-        target_field: str = "human_reference",
+        target_field: str = "summary",
         source_field: str = "input",
         use_padding: bool = False
     ):
@@ -45,9 +45,9 @@ class InstructDataset(Dataset):
 
         self.templates = {
             "samsum_format": [
-                "### Request: {instruction}\n ### Response: "
+                "### Summarize this: {instruction}\n ### Output: "
             ],
-            "output_separator": "### Response: "
+            "output_separator": "### Output: "
             }
 
         self.records = []
@@ -149,7 +149,7 @@ class SAMsumDataset():
             max_target_tokens_count=self.cutoff_len_target,
             sample_rate=1.0,
             input_type="causal",
-            target_field="human_reference",
+            target_field="summary",
             source_field="",
             only_target_loss=False
         )
@@ -163,7 +163,7 @@ class SAMsumDataset():
             max_target_tokens_count=self.cutoff_len_target,
             sample_rate=1.0,
             input_type="causal",
-            target_field="human_reference",
+            target_field="summary",
             source_field="",
             only_target_loss=False
         )
