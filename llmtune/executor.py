@@ -98,6 +98,7 @@ def finetune(llm, tokenizer, tune_config):
         gradient_accumulation_steps=1, #tune_config.gradient_accumulation_steps,
         warmup_steps=tune_config.warmup_steps,
         num_train_epochs=tune_config.epochs,
+        max_steps = 20,
         learning_rate=tune_config.lr,
         fp16=True,
         logging_steps=tune_config.logging_steps,
@@ -134,8 +135,8 @@ def finetune(llm, tokenizer, tune_config):
     # else:
     #     trainer.train()
 
-    # trainer.train(resume_from_checkpoint=True)
-    trainer.train()
+    trainer.train(resume_from_checkpoint='content/gdrive/MyDrive/Llama-13B-4bit-ft-samsum-checkpoint')
+    # trainer.train()
 
     # Save Model
     model.save_pretrained(tune_config.lora_out_dir)
