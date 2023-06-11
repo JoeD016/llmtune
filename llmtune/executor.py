@@ -100,7 +100,7 @@ def finetune(llm, tokenizer, tune_config, ds_type):
         num_train_epochs=2, #tune_config.epochs
         learning_rate=1e-3, #tune_config.lr
         fp16=True,
-        lr_scheduler_type = "cosine", ## LoRA original paper uses linear with GPT-2/3
+        #lr_scheduler_type = "cosine", ## LoRA original paper uses linear with GPT-2/3
         logging_steps=tune_config.logging_steps,
         evaluation_strategy="no",
         save_strategy="steps",
@@ -115,12 +115,12 @@ def finetune(llm, tokenizer, tune_config, ds_type):
     )
 
     data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
-    
-    if ds_type == "samsum":
-        #data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
-        data_collator_config = transformers.DataCollatorForTokenClassification(tokenizer, pad_to_multiple_of=8)
-    else: 
-        data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
+
+    # if ds_type == "samsum":
+    #     #data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
+    #     data_collator_config = transformers.DataCollatorForTokenClassification(tokenizer, pad_to_multiple_of=8)
+    # else: 
+    #     data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
     trainer = transformers.Trainer(
         model=model,
@@ -146,7 +146,7 @@ def finetune(llm, tokenizer, tune_config, ds_type):
     trainer.train()
 
     # Save Model
-    model.save_pretrained(tune_config.adapter)
+    model.save_pretrained(tune_config.lora_out_dir)
 
 def quantize(
     llm_config, dataset, nsamples, wbits, groupsize, percdamp, seed, weights
