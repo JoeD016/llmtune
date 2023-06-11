@@ -131,14 +131,13 @@ def finetune(llm, tokenizer, tune_config, ds_type):
     # use half precision
     model = to_half_precision(model)
 
-    ## disabled function of resume checkpoint
-    # if tune_config.resume_checkpoint:
-    #     print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
-    #     trainer.train(tune_config.resume_checkpoint)
-    # else:
-    #     trainer.train()
+    if tune_config.resume_checkpoint:
+        print('Resuming from {} ...'.format(tune_config.resume_checkpoint))
+        trainer.train(tune_config.resume_checkpoint)
+    else:
+        trainer.train()
 
-    # trainer.train(resume_from_checkpoint=True)
+    trainer.train(resume_from_checkpoint=True)
     trainer.train()
 
     # Save Model
