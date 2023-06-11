@@ -75,7 +75,7 @@ def generate(
         )
     return tokenizer.decode([el.item() for el in generated_ids[0]])    
 
-def finetune(llm, tokenizer, tune_config, ds_type):
+def finetune(llm, tokenizer, tune_config):
     import transformers
     transformers.logging.set_verbosity_info()
     # tokenizer.pad_token_id = 0 ## commented out after tokenizer has been fixed.
@@ -113,7 +113,7 @@ def finetune(llm, tokenizer, tune_config, ds_type):
         resume_from_checkpoint=True,
     )
 
-    if ds_type == "samsum":
+    if tune_config.ds_type == "samsum":
         data_collator_config = transformers.DataCollatorForTokenClassification(tokenizer, pad_to_multiple_of=8)
     else: 
         data_collator_config = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
