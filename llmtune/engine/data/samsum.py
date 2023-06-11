@@ -136,10 +136,8 @@ class SAMsumDataset():
     
 
     def prepare_data(self, use_eos_token=True, **kwargs) -> None:
-        if self.dataset:
-            data = load_dataset("json", data_files=self.dataset)
-        else:
-            data = load_dataset(DEFAULT_HF_PATH)
+        from datasets import load_dataset 
+        data = load_dataset(DEFAULT_HF_PATH)
 
         train_records = data['train']
         val_records = data['test']
