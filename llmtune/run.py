@@ -198,7 +198,7 @@ def evaluate_metrics(args):
 
     def evaluate_peft_model(llm,tokenizer,sample,args):
         # Load dataset from the hub and get a sample
-        prompt = f"### Dialogue:{sample}\n ### Summary:"
+        prompt = f"### Summarized this: {sample}\n ### Output: "
         
         output = llmtune.generate(
         llm, 
@@ -235,7 +235,7 @@ def evaluate_metrics(args):
     print(f"rouge2: {rogue['rouge2']* 100:2f}%")
     print(f"rougeL: {rogue['rougeL']* 100:2f}%")
     print(f"rougeLsum: {rogue['rougeLsum']* 100:2f}%")
-    
+
 def download(args):
     from llmtune.config import get_llm_config
     from llmtune.utils import download_file
