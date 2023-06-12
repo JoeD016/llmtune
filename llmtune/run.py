@@ -167,8 +167,8 @@ def generate(args):
         tokenizer, 
         prompt, 
         args.min_length, 
-        args.max_length, 
-        520,        
+        520, 
+        args.temperature,        
         args.top_k, 
         args.top_p, 
     )
