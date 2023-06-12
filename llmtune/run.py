@@ -168,7 +168,7 @@ def generate(args):
         prompt, 
         args.min_length, 
         args.max_length, 
-        args.temperature,        
+        520,        
         args.top_k, 
         args.top_p, 
     )
@@ -204,7 +204,7 @@ def evaluate_metrics(args):
         tokenizer, 
         prompt, 
         args.min_length, 
-        args.max_length, 
+        520, 
         args.temperature,        
         args.top_k, 
         args.top_p, 
