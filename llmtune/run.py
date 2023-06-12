@@ -172,12 +172,12 @@ def generate(args):
         args.top_k, 
         args.top_p, 
     )
-
+    print(output)
     if args.instruction:
         from llmtune.engine.data.samsum import make_output
         output = make_output(output)
 
-    print(output)
+    
 
 def evaluate_metrics(args):
     import rouge_score
