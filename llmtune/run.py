@@ -158,7 +158,7 @@ def generate(args):
         raise Exception('Cannot specify both prompt and instruction')
     if args.instruction:
         from llmtune.engine.data.samsum import make_prompt
-        prompt = make_prompt(args.instruction, input_="")
+        prompt = make_prompt(args.instruction)
     else:
         prompt = args.prompt
 
