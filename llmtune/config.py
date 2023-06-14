@@ -54,6 +54,7 @@ def get_finetune_config(args):
         save_steps=args.save_steps,
         save_total_limit=args.save_total_limit,
         logging_steps=args.logging_steps,
+        resume_checkpoint=args.resume_checkpoint,
     )
 
 
