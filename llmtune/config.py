@@ -58,9 +58,9 @@ def get_finetune_config(args):
 
 
 # helpers for loading finetuning configs using library import
-def set_up_finetune_config(dataset,data_type,adapter,mbatch_size,batch_size,epochs,lr,cutoff_len,lora_r,lora_alpha,lora_dropout,val_set_size,warmup_steps,save_steps,save_total_limit,logging_steps):
+def set_up_finetune_config(data_type,adapter,mbatch_size,batch_size,epochs,lr,cutoff_len,lora_r,lora_alpha,lora_dropout,val_set_size,warmup_steps,save_steps,save_total_limit,logging_steps):
     return Finetune4bConfig(
-        dataset=dataset, 
+        dataset=False, 
         ds_type=data_type, 
         lora_out_dir=adapter, 
         mbatch_size=mbatch_size,
