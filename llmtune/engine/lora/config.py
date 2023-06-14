@@ -12,6 +12,7 @@ class Finetune4bConfig:
         val_set_size: float,
         warmup_steps: int, save_steps: int, 
         save_total_limit: int, logging_steps: int,
+        resume_checkpoint: bool,
      ):
         self.dataset = dataset
         self.ds_type = ds_type
@@ -35,5 +36,6 @@ class Finetune4bConfig:
         self.local_rank = int(os.environ.get("LOCAL_RANK", 0))
         self.ddp = self.world_size != 1
         self.device_map = "auto" if not self.ddp else {"": self.local_rank}
+        self.resume_checkpoint = resume_checkpoint
         if self.ddp:
             self.gradient_accumulation_steps = self.gradient_accumulation_steps // self.world_size
