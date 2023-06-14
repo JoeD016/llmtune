@@ -200,6 +200,7 @@ def evaluate_metrics(args):
         # Load dataset from the hub and get a sample
         prompt = f"### Summarized this: {sample}\n ### Output: "
         
+        ## Currently the hyper paramters are hard-coded.
         output = llmtune.generate(
         llm, 
         tokenizer, 
