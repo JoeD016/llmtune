@@ -61,7 +61,7 @@ def generate(
 ):
     llm.to(DEV)
     llm = to_half_precision(llm)
-    
+
     input_ids = tokenizer.encode(prompt, return_tensors="pt").to(DEV)
 
     with torch.no_grad():
@@ -96,19 +96,21 @@ def finetune(llm, tokenizer, tune_config):
 
     training_arguments = transformers.TrainingArguments(
         per_device_train_batch_size=tune_config.mbatch_size,
+        per_device_eval_batch_size=tune_config.mbatch_size,
         gradient_accumulation_steps=tune_config.gradient_accumulation_steps,
-        warmup_steps=tune_config.warmup_steps,
+        #warmup_steps=tune_config.warmup_steps,
+        warmup_ratio=0.06,
         num_train_epochs=tune_config.epochs,
         learning_rate=tune_config.lr,
         fp16=True,
-        logging_steps=tune_config.logging_steps,
-        evaluation_strategy="no",
+        logging_steps=tune_config.logging_steps, ##ideally want logging steps to be the same as save_steps
+        evaluation_strategy="steps",
         save_strategy="steps",
-        eval_steps=None,
+        eval_steps=tune_config.save_steps, #same as save_steps
         save_steps=tune_config.save_steps,
         output_dir=tune_config.lora_out_dir,
         save_total_limit=tune_config.save_total_limit,
-        load_best_model_at_end=False,
+        load_best_model_at_end=True,
         ddp_find_unused_parameters=False if tune_config.ddp else None,
         # resume_from_checkpoint=tune_config.resume_checkpoint,
         resume_from_checkpoint=True,
