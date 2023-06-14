@@ -55,3 +55,25 @@ def get_finetune_config(args):
         save_total_limit=args.save_total_limit,
         logging_steps=args.logging_steps,
     )
+
+
+# helpers for loading finetuning configs using library import
+def set_up_finetune_config(dataset,data_type,adapter,mbatch_size,batch_size,epochs,lr,cutoff_len,lora_r,lora_alpha,lora_dropout,val_set_size,warmup_steps,save_steps,save_total_limit,logging_steps):
+    return Finetune4bConfig(
+        dataset=dataset, 
+        ds_type=data_type, 
+        lora_out_dir=adapter, 
+        mbatch_size=mbatch_size,
+        batch_size=batch_size,
+        epochs=epochs, 
+        lr=lr,
+        cutoff_len=cutoff_len,
+        lora_r=lora_r, 
+        lora_alpha=lora_alpha, 
+        lora_dropout=lora_dropout,
+        val_set_size=val_set_size,
+        warmup_steps=warmup_steps,
+        save_steps=save_steps,
+        save_total_limit=save_total_limit,
+        logging_steps=logging_steps,
+    )
