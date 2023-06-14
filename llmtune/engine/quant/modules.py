@@ -4,6 +4,7 @@ import torch.nn as nn
 
 try:
     import quant_cuda
+    print("quant_cuda loaded")
 except:
     print('CUDA extension not installed. Inference will not work.')
 
