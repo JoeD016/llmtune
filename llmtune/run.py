@@ -158,7 +158,8 @@ def generate(args):
         raise Exception('Cannot specify both prompt and instruction')
     if args.instruction:
         from llmtune.engine.data.samsum import make_prompt
-        prompt = make_prompt(args.instruction)
+        prompt = prompt = f"### Summarized this: {args.instruction}\n ### Output: "
+        # prompt = make_prompt()
     else:
         prompt = args.prompt
 
@@ -172,12 +173,12 @@ def generate(args):
         args.top_k, 
         args.top_p, 
     )
-
+    print(output)
     if args.instruction:
         from llmtune.engine.data.samsum import make_output
         output = make_output(output)
 
-    print(output)
+    print('Make output: ' + output)
 
 
 def evaluate_metrics(args):
