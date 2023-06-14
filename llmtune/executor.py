@@ -112,8 +112,8 @@ def finetune(llm, tokenizer, tune_config):
         save_total_limit=tune_config.save_total_limit,
         load_best_model_at_end=True,
         ddp_find_unused_parameters=False if tune_config.ddp else None,
-        # resume_from_checkpoint=tune_config.resume_checkpoint,
-        resume_from_checkpoint=True,
+        resume_from_checkpoint=tune_config.resume_checkpoint,
+        # resume_from_checkpoint=True,
     )
 
     if tune_config.ds_type == "samsum":
