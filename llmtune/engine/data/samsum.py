@@ -171,6 +171,13 @@ class SAMsumDataset():
         self.val_data = val_dataset
 
 
+def make_prompt(dialogue, summary=""):
+    return "{0}\n{1}\n\n{2}\n{3}".format(
+        "### Summarize this:",
+        dialogue,
+        "### Output:",
+        summary,
+    )
 
 def make_output(raw_output):
     return raw_output.split("### Output: ")[1].strip()
