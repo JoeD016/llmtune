@@ -204,11 +204,11 @@ def evaluate_metrics(args):
         llm, 
         tokenizer, 
         prompt, 
-        args.min_length, 
+        10, 
         520, 
         args.temperature,        
         args.top_k, 
-        args.top_p, 
+        0.9, 
         )
         
         output = make_output(output)

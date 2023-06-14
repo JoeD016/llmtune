@@ -61,6 +61,7 @@ def generate(
 ):
     llm.to(DEV)
     llm = to_half_precision(llm)
+    
     input_ids = tokenizer.encode(prompt, return_tensors="pt").to(DEV)
 
     with torch.no_grad():
