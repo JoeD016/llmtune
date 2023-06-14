@@ -103,7 +103,7 @@ def make_parser():
         help='Type of model to load')
     tune_parser.add_argument('--weights', type=str, required=True,
         help='Path to the model weights.')
-    tune_parser.add_argument("--data-type", choices=["alpaca", "gpt4all","samsum"],
+    tune_parser.add_argument("--data-type", choices=["alpaca", "gpt4all", "samsum"],
         help="Dataset format", default="alpaca")
     tune_parser.add_argument("--dataset", required=False,
         help="Path to local dataset file.")
@@ -158,7 +158,7 @@ def generate(args):
         raise Exception('Cannot specify both prompt and instruction')
     if args.instruction:
         from llmtune.engine.data.samsum import make_prompt
-        prompt = make_prompt(args.instruction, input_="")
+        prompt = make_prompt(args.instruction)
     else:
         prompt = args.prompt
 
@@ -167,7 +167,7 @@ def generate(args):
         tokenizer, 
         prompt, 
         args.min_length, 
-        args.max_length, 
+        520, 
         args.temperature,        
         args.top_k, 
         args.top_p, 
