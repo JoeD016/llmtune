@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 
@@ -139,7 +140,13 @@ def finetune(llm, tokenizer, tune_config):
     #     trainer.train(tune_config.resume_checkpoint)
     # else:
     #     trainer.train()
-    if tune_config.resume_checkpoint:
+    # if tune_config.resume_checkpoint:
+    #     trainer.train(resume_from_checkpoint=True)
+    # else:
+    #     trainer.train()
+
+    checkpoint_dir = tune_config.lora_out_dir
+    if tune_config.resume_checkpoint and os.path.exists(checkpoint_dir) and os.listdir(checkpoint_dir):
         trainer.train(resume_from_checkpoint=True)
     else:
         trainer.train()
