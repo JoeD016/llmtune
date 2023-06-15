@@ -112,8 +112,7 @@ def finetune(llm, tokenizer, tune_config):
         save_total_limit=tune_config.save_total_limit,
         load_best_model_at_end=True,
         ddp_find_unused_parameters=False if tune_config.ddp else None,
-        resume_from_checkpoint=tune_config.resume_checkpoint,
-        # resume_from_checkpoint=True,
+        # resume_from_checkpoint=tune_config.resume_checkpoint,
     )
 
     if tune_config.ds_type == "samsum":
@@ -140,9 +139,10 @@ def finetune(llm, tokenizer, tune_config):
     #     trainer.train(tune_config.resume_checkpoint)
     # else:
     #     trainer.train()
-
-    # trainer.train(resume_from_checkpoint=True)
-    trainer.train()
+    if tune_config.resume_checkpoint:
+        trainer.train(resume_from_checkpoint=True)
+    else:
+        trainer.train()
 
     # Save Model
     model.save_pretrained(tune_config.lora_out_dir)
