@@ -114,8 +114,8 @@ def load_llama(llm_config, checkpoint):
     model = accelerate.load_checkpoint_and_dispatch(
             model=model,
             checkpoint=checkpoint,
-            device_map="auto",
-            # device_map={'': 0},
+            # device_map="auto",
+            device_map={'': 0},
             no_split_module_classes=["LlamaDecoderLayer"]
     )
     model.seqlen = 2048
