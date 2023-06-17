@@ -63,6 +63,8 @@ def generate(
     llm.to(DEV)
     llm = to_half_precision(llm)
 
+    llm.tie_weights()
+
     input_ids = tokenizer.encode(prompt, return_tensors="pt").to(DEV)
 
     with torch.no_grad():
@@ -75,7 +77,7 @@ def generate(
             top_k=top_k,
             temperature=temperature,
         )
-    return tokenizer.decode([el.item() for el in generated_ids[0]])    
+    return tokenizer.decode([el.item() for el in generated_ids[0]],skip_special_tokens=True)    
 
 def finetune(llm, tokenizer, tune_config):
     import transformers
@@ -144,6 +146,9 @@ def finetune(llm, tokenizer, tune_config):
     #     trainer.train(resume_from_checkpoint=True)
     # else:
     #     trainer.train()
+
+    ## tie-weights
+    model.tie_weights()
 
     checkpoint_dir = tune_config.lora_out_dir
     if tune_config.resume_checkpoint and os.path.exists(checkpoint_dir) and os.listdir(checkpoint_dir):
