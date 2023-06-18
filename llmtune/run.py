@@ -196,7 +196,9 @@ def evaluate_metrics(args):
 
 
     llm, tokenizer = llmtune.load_llm(args.model, args.weights)
-
+    llm.config.num_beams = 5
+    llm.config.max_length = 50
+    
     def evaluate_peft_model(llm,tokenizer,sample,args):
         # Load dataset from the hub and get a sample
         prompt = f"### Summarized this: {sample}\n ### Output: "
@@ -219,7 +221,7 @@ def evaluate_metrics(args):
         # Some simple post-processing
         return output
     
-    def evaluate_sample(sample,max_target_length=65):
+    def evaluate_sample(llm,tokenizer,sample,args):
         # Load dataset from the hub and get a sample
         sample_word = f"### Summarize this: {sample}\n ### Output: "
         input_ids = tokenizer(sample_word, return_tensors="pt", truncation=True).input_ids.cuda()
