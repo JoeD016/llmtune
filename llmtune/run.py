@@ -188,7 +188,7 @@ def evaluate_metrics(args):
     from tqdm import tqdm
     from datasets import load_dataset 
     import llmtune.executor as llmtune
-    from llmtune.engine.data.samsum import make_output
+    from llmtune.engine.data.samsum import make_output, InstructDataset
 
 
     # Metric
@@ -219,6 +219,16 @@ def evaluate_metrics(args):
         # Some simple post-processing
         return output
     
+    def evaluate_sample(sample,max_target_length=65):
+        # Load dataset from the hub and get a sample
+        sample_word = f"### Summarize this: {sample}\n ### Output: "
+        input_ids = tokenizer(sample_word, return_tensors="pt", truncation=True).input_ids.cuda()
+        outputs = llm.generate(input_ids=input_ids, do_sample=True, top_p=0.9, max_new_tokens = 65)
+        output = tokenizer.decode(outputs[0].detach().cpu().numpy(), skip_special_tokens=True).replace(sample_word,"")
+        print(f"Output:\n{output}")
+        # Some simple post-processing
+        return output
+    
     
     
     dataset = load_dataset('samsum')
@@ -226,7 +236,7 @@ def evaluate_metrics(args):
     # this can take ~45 minutes
     predictions = []
     for sample in tqdm(dataset['test']['dialogue'][0:args.test_count]): ## currently only support sequential sampling (from 0 to 200 for example)
-        p = evaluate_peft_model(llm,tokenizer,sample,args)
+        p = evaluate_sample(llm,tokenizer,sample,args)
         predictions.append(p)
 
     # compute metric 
